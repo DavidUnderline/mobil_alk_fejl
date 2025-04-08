@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Allaskereso-portal</string>
+    <string name="username">username</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="name">name</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="jobs">Jobs</string>
+</resources>

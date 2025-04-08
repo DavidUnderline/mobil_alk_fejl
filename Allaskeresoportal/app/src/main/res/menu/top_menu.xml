@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item
+        android:id="@+id/home_logout"
+        android:title="@string/logout"
+        android:icon="@drawable/logout"
+        app:showAsAction="always"
+        android:orderInCategory="3"
+        />
+<!--        app:actionViewClass="android.widget.SearchView"-->
+    <item
+        android:id="@+id/home_profile"
+        android:title="@string/profile"
+        android:icon="@drawable/login_vectorr"
+        app:showAsAction="always"
+        android:orderInCategory="2"
+        />
+<!--        app:actionViewClass="android.widget.SearchView"-->
+    <item
+        android:id="@+id/home_jobs"
+        android:title="@string/jobs"
+        android:icon="@drawable/job"
+        app:showAsAction="always"
+        android:orderInCategory="1"
+        />
+<!--        app:actionViewClass="android.widget.SearchView"-->
+</menu>
