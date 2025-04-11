@@ -5,7 +5,7 @@
     <item
         android:id="@+id/home_logout"
         android:title="@string/logout"
-        android:icon="@drawable/logout"
+        android:icon="@drawable/logout_dark"
         app:showAsAction="always"
         android:orderInCategory="3"
         />
@@ -13,7 +13,7 @@
     <item
         android:id="@+id/home_profile"
         android:title="@string/profile"
-        android:icon="@drawable/login_vectorr"
+        android:icon="@drawable/login_dark"
         app:showAsAction="always"
         android:orderInCategory="2"
         />
@@ -21,7 +21,7 @@
     <item
         android:id="@+id/home_jobs"
         android:title="@string/jobs"
-        android:icon="@drawable/job"
+        android:icon="@drawable/job_dark"
         app:showAsAction="always"
         android:orderInCategory="1"
         />
