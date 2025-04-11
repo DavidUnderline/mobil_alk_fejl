@@ -9,29 +9,41 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/border_rounded_background_color"
+
         >
 
         <TextView
             android:id="@+id/job_title"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:text="asdasda"
-            android:autoSizeTextType="uniform"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginEnd="140dp"
             android:autoSizeMaxTextSize="1000dp"
             android:autoSizeMinTextSize="1dp"
-            android:textSize="20dp"
+            android:autoSizeTextType="uniform"
+            android:textSize="20sp"
+            android:text="asdasda"
+            android:textAlignment="center"
+            android:textColor="@color/white"
             />
+
         <TextView
             android:id="@+id/job_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="kater"
+            android:text="cater"
             android:layout_below="@id/job_title"
             android:autoSizeTextType="uniform"
             android:autoSizeMaxTextSize="1000dp"
             android:autoSizeMinTextSize="1dp"
             android:textSize="20dp"
             android:layout_marginTop="20dp"
+            android:textColor="@color/white"
             />
         <TextView
             android:id="@+id/job_salary"
@@ -44,6 +56,7 @@
             android:autoSizeMinTextSize="1dp"
             android:textSize="20dp"
             android:layout_marginTop="20dp"
+            android:textColor="@color/white"
             />
         <TextView
             android:id="@+id/job_description"
@@ -56,6 +69,7 @@
             android:autoSizeMinTextSize="1dp"
             android:textSize="20dp"
             android:layout_marginTop="20dp"
+            android:textColor="@color/white"
             />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
