@@ -8,10 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border_rounded_background_color"
-
-        >
+        android:layout_height="296dp"
+        android:background="@drawable/border_rounded_background_color">
 
         <TextView
             android:id="@+id/job_title"
@@ -20,56 +18,54 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="140dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="140dp"
             android:autoSizeMaxTextSize="1000dp"
             android:autoSizeMinTextSize="1dp"
             android:autoSizeTextType="uniform"
-            android:textSize="20sp"
             android:text="asdasda"
             android:textAlignment="center"
             android:textColor="@color/white"
-            />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/job_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="cater"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
             android:layout_below="@id/job_title"
-            android:autoSizeTextType="uniform"
+            android:layout_marginTop="12dp"
             android:autoSizeMaxTextSize="1000dp"
             android:autoSizeMinTextSize="1dp"
-            android:textSize="20dp"
-            android:layout_marginTop="20dp"
+            android:autoSizeTextType="uniform"
+            android:text="cater"
             android:textColor="@color/white"
-            />
+            android:textSize="20dp" />
+
         <TextView
             android:id="@+id/job_salary"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="sal"
             android:layout_below="@id/job_category"
-            android:autoSizeTextType="uniform"
+            android:layout_marginTop="20dp"
             android:autoSizeMaxTextSize="1000dp"
             android:autoSizeMinTextSize="1dp"
-            android:textSize="20dp"
-            android:layout_marginTop="20dp"
+            android:autoSizeTextType="uniform"
+            android:text="sal"
             android:textColor="@color/white"
-            />
+            android:textSize="20dp" />
+
         <TextView
             android:id="@+id/job_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="descr"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
             android:layout_below="@id/job_salary"
-            android:autoSizeTextType="uniform"
+            android:layout_marginTop="10dp"
             android:autoSizeMaxTextSize="1000dp"
             android:autoSizeMinTextSize="1dp"
-            android:textSize="20dp"
-            android:layout_marginTop="20dp"
+            android:autoSizeTextType="uniform"
+            android:text="sdfasdfasdfr"
             android:textColor="@color/white"
-            />
+            android:textSize="20dp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

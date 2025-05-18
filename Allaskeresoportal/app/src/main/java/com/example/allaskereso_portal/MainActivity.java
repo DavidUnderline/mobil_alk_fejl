@@ -1,5 +1,6 @@
 package com.example.allaskereso_portal;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -29,13 +31,20 @@ public class MainActivity extends AppCompatActivity {
     EditText passwordET;
     ImageView home;
     ImageView prof_image;
+    private static final String LOG = MainActivity.class.getName();
     private FirebaseAuth fAuth;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        context = this;
+        NotificationHelper.createNotificationChannel(context);
+
+        NotificationHelper.showNotification(context, "animaciok","belepeskor az emeberke jel és a haziko");
 
         emailET = findViewById(R.id.login_email_input);
         passwordET = findViewById(R.id.login_password_input);
@@ -60,14 +69,20 @@ public class MainActivity extends AppCompatActivity {
         String password = passwordET.getText().toString();
 
         if(email.isEmpty() || password.isEmpty()){
-            Snackbar.make(findViewById(android.R.id.content), "Empty field / fields", Snackbar.LENGTH_SHORT).show();
+            NotificationHelper.showNotification(context, "Error", "Empty field / fields");
+            Snackbar.make(findViewById(android.R.id.content), "Feladat miatt hibauzenet Notificaon-ben fent van", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
+        auth(email, password);
+    }
+
+    public void auth(String email, String password){
         fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    Log.e(LOG,"login");
                     toHome();
 
                 } else{
@@ -82,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(home);
     }
 
-    private static final String LOG = RegisterActivity.class.getName();
-
     public void toHomeV(View view) {
         Animation ani = AnimationUtils.loadAnimation(this, R.anim.scale);
         home.startAnimation(ani);
@@ -92,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Log.i(LOG, "home reached");
                     toHome();
+
                 } else{
                     Snackbar.make(findViewById(android.R.id.content), "Can't reach home", Snackbar.LENGTH_SHORT).show();
                 }
