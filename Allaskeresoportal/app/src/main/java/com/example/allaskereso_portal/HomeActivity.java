@@ -1,6 +1,7 @@
 package com.example.allaskereso_portal;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.RouteListingPreference;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,18 +22,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.FirebaseApp;
 
 import java.io.CharArrayReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String LOG = RegisterActivity.class.getName();
     private FirebaseUser user;
-
+    private FirebaseAuth mAuth;
+    private FirestoreHelper firestoreHelper;
     private RecyclerView recViewv;
-    private ArrayList<Job> jobs;
-    private JobItemAdapter adapter;
+
+    private List<Job> jobList = new ArrayList<>();
+    private JobItemAdapter jobAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,29 +45,26 @@ public class HomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
-        if(user != null){
-            Snackbar.make(findViewById(android.R.id.content), "Home page", Snackbar.LENGTH_SHORT).show();
-            Log.i(LOG, "user ! null");
-        } else{
-            Snackbar.make(findViewById(android.R.id.content), "Not registered user", Snackbar.LENGTH_SHORT).show();
-            Log.i(LOG, "not registered");
-        }
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+        Log.v(LOG, "---- USER --- "+ user);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        jobs = new ArrayList<>();
+        jobList = new ArrayList<>();
 
         recViewv = findViewById(R.id.recview);
         recViewv.setLayoutManager(new GridLayoutManager(this, 1));
 
-        adapter = new JobItemAdapter(this, jobs);
 
-        recViewv.setAdapter(adapter);
+        FirebaseApp.initializeApp(this);
+        firestoreHelper = new FirestoreHelper();
 
-
+        jobAdapter = new JobItemAdapter(this, jobList);
+        recViewv.setAdapter(jobAdapter);
         init();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -72,19 +74,28 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-//    @SuppressLint("NotifyDataSetChanged")
+    private void loadJobs() {
+        Log.e(LOG, "-------> clicked --" + firestoreHelper);
+//        firestoreHelper.exampleUsage();
+        firestoreHelper.getJobs(new FirestoreHelper.FirestoreCallback() {
+//            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onCallback(List<Job> jobs) {
+                jobList.clear();
+                jobList.addAll(jobs);
+                jobAdapter.notifyDataSetChanged();
+                Log.d(LOG, "Number of fetched jobs " + jobList.size());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(LOG, "Error while fetching jobs", e);
+            }
+        });
+    }
+
     public void init() {
-        //todo: debug with log here and in adapter
-        Log.i(LOG, "init-ben");
-
-        String title = "test1";
-        String category = "test category";
-        String salary = "0";
-        String description = "test description";
-//    todo: arrays, jobs.clear(), loop;
-
-        jobs.add(new Job(title, category, salary, description));
-        adapter.notifyDataSetChanged();
+        loadJobs();
     }
 
     @Override
@@ -105,11 +116,20 @@ public class HomeActivity extends AppCompatActivity {
                 Log.d("MenuItem", "logout");
                 FirebaseAuth.getInstance().signOut();
                 finish();
+                Intent main = new Intent(this, MainActivity.class);
+                startActivity(main);
                 return true;
 
             case "home_profile":
                 Log.d("MenuItem", "profile");
-                return true;
+                if(user != null && !user.isAnonymous()){
+                    Snackbar.make(findViewById(android.R.id.content), "Home page", Snackbar.LENGTH_SHORT).show();
+                    Intent profile = new Intent(this, ProfileActivity.class);
+                    startActivity(profile);
+                    return true;
+                }
+                Snackbar.make(findViewById(android.R.id.content), "Not registered user", Snackbar.LENGTH_SHORT).show();
+                return false;
 
             case "home_jobs":
                 Log.d("MenuItem", "jobs");

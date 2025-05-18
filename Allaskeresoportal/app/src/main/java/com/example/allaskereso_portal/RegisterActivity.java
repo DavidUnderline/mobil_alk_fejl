@@ -17,8 +17,11 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 public class RegisterActivity extends AppCompatActivity {
     EditText register_nameET;
@@ -26,19 +29,26 @@ public class RegisterActivity extends AppCompatActivity {
     EditText register_passwordET;
     EditText register_passwordReET;
     private FirebaseAuth fAuth;
+    private FirestoreHelper firestoreHelper;
+    private FirebaseUser user;
+
+    private static final String LOG = MainActivity.class.getName();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.menu);
 
         register_nameET = findViewById(R.id.register_name_input);
         register_emailET = findViewById(R.id.register_email_input);
         register_passwordET = findViewById(R.id.register_password_input);
         register_passwordReET = findViewById(R.id.register_passwordRe_input);
         fAuth = FirebaseAuth.getInstance();
+
+        FirebaseApp.initializeApp(this);
+        firestoreHelper = new FirestoreHelper();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -64,22 +74,40 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        firestoreHelper.createUserWithEmailAndPassword(email, password, name, new FirestoreHelper.CreateUserCallback() {
+            @Override
+            public void onSuccess(FirebaseUser user) {
+                Log.v(LOG, "created successfully");
+                auth(email, password);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.v(LOG, "couldnt register");
+            }
+        });
+    }
+
+    public void auth(String email, String password){
+        fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    Log.v(LOG, "reg ok --> login ok");
                     toHome();
+
                 } else{
-                    Toast.makeText(RegisterActivity.this, "Error while registration process" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "There's no such user with given credentials", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void toHome(){
+    public void toHome(){
         Intent home = new Intent(this, HomeActivity.class);
         startActivity(home);
     }
+
 
     public void cancel(View view) {
         finish();
