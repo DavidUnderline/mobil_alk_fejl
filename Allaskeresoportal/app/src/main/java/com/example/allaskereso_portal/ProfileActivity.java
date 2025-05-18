@@ -2,7 +2,10 @@ package com.example.allaskereso_portal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -22,6 +27,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import android.Manifest;
 
 import java.util.Objects;
 
@@ -32,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText emailInput;
     private EditText nameInput;
     private EditText reminderInput;
+    private static final int REQUEST_SCHEDULE_EXACT_ALARM = 1000;
 
     private static final String LOG = RegisterActivity.class.getName();
 
@@ -93,6 +101,15 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        Button getLocationButton = findViewById(R.id.getLocationButton);
+        getLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, LocationActivity.class);
+                startActivity(intent);
+            }
+        });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -101,16 +118,34 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void setReminder(View view) {
-//        NotificationHelper.showNotification(this, "reminder", "inside setreminder");
         String message = reminderInput.getText().toString();
 
-//        NotificationHelper.showNotification(context, "asd", message);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivityForResult(intent, REQUEST_SCHEDULE_EXACT_ALARM);
+                return;
+            }
+        }
+
         if (!message.isEmpty()) {
-            Toast.makeText(this, "Successfully set reminder!", Toast.LENGTH_SHORT).show();
-            Log.v(LOG, String.valueOf(this));
             AlarmHelper.setReminderAlarm(this, 2000, message);
+            Toast.makeText(this, "Successfully set reminder!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Please give a reminder message!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SCHEDULE_EXACT_ALARM) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.SCHEDULE_EXACT_ALARM) == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Reminder have been set!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Need permission to set reminder!", Toast.LENGTH_LONG).show();
+            }
         }
     }
 

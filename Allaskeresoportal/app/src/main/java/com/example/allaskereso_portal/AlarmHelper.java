@@ -14,7 +14,7 @@ public class AlarmHelper {
     private static final String TAG = "AlarmHelper";
     public static final String REMINDER_CHANNEL_ID = "reminder_channel";
 
-    public static final int REMINDER_REQUEST_CODE = 100;
+    public static final int REMINDER_REQUEST_CODE = 1000;
 
     public static void createReminderChannel(Context context) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

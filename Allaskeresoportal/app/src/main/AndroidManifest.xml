@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Allaskeresoportal"
         tools:targetApi="31">
+        <activity
+            android:name=".LocationActivity"
+            android:exported="false" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
@@ -35,7 +41,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ReminderBroadcastReceiver"
+        <receiver
+            android:name=".ReminderBroadcastReceiver"
             android:exported="false" />
     </application>
 
